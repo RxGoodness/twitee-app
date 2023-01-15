@@ -1,0 +1,20 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "287693@Ata",
+  "database": "google_oauth2_app",
+  "entities": [
+    "src/entity/**/*.ts"
+  ],
+  "synchronize": false,
+  "migrations": [
+    "src/migration/**/*.ts"
+  ],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration"
+  },
+  "migrationsRun": true
+}

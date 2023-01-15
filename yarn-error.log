@@ -1,0 +1,76 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\adedokunbt\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add bcryptjs
+
+PATH: 
+  C:\Users\adedokunbt\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\mingw64\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\local\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\mingw64\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\bin;C:\Users\adedokunbt\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\nodejs;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\nodejs;C:\Users\adedokunbt\AppData\Local\Microsoft\WindowsApps;C:\Users\adedokunbt\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\adedokunbt\AppData\Local\Programs\Git\cmd;C:\Users\adedokunbt\AppData\Roaming\npm;C:\Users\adedokunbt\AppData\Roaming\Flow;C:\Users\adedokunbt\AppData\Roaming\Flow;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\bin\vendor_perl;C:\Users\adedokunbt\AppData\Local\Programs\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.17.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.npmjs.org/@types%2fmysql2: Not found
+      at Request.params.callback [as _callback] (C:\Users\adedokunbt\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66145:18)
+      at Request.self.callback (C:\Users\adedokunbt\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (C:\Users\adedokunbt\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (C:\Users\adedokunbt\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1358:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+      "name": "twit",
+      "version": "1.0.0",
+      "description": "A twitter clone using express, typeorm, typescript and mysql",
+      "main": "dist/app.js",
+      "scripts": {
+        "start": "nodemon -r ts-node/register src/app.ts",
+        "build": "tsc",
+        "migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -n",
+        "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+        "migration:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert"
+      },
+      "keywords": [
+        "express",
+        "typeorm",
+        "typescript",
+        "mysql"
+      ],
+      "author": "Your Name",
+      "license": "MIT",
+      "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mysql2": "^2.1.0",
+        "reflect-metadata": "^0.1.13",
+        "typeorm": "^0.2.25",
+        "ts-node": "^9.0.0",
+        "tsconfig-paths": "^3.9.0"
+      },
+      "devDependencies": {
+        "@types/bcryptjs": "^2.4.2",
+        "@types/express": "^4.17.7",
+        "@types/jsonwebtoken": "^8.3.0",
+        "@types/mysql2": "^2.0.4",
+        "nodemon": "^2.0.4",
+        "ts-node-dev": "^1.0.0-pre.44",
+        "typescript": "^4.0.5"
+      },
+      "type": "module"
+    }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

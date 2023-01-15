@@ -1,0 +1,32 @@
+{
+  "name": "twitee",
+  "version": "1.0.0",
+  "description": "Your project description",
+  "main": "app.ts",
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register -r dotenv/config ./src/app.ts",
+    "build": "tsc",
+    "migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+    "test": "jest"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "global": "^4.4.0",
+    "jsonwebtoken": "^9.0.0",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "10.8.1",
+    "typeorm": "^0.3.11",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.15",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/supertest": "^2.0.12",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3",
+    "ts-node-dev": "^1.0.0-pre.63",
+    "tsconfig-paths": "^3.9.0"
+  }
+}

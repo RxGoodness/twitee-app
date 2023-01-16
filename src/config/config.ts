@@ -32,7 +32,7 @@ export const DATABASE_CONNECTION = createConnection
       database: 'google_oauth2_app',
     entities: [
         // User, Tweet, Like
-        __dirname + "/entities/user.ts"
+        __dirname + '/../**/*.entity.{js,ts}'
     ],
     synchronize: true,
     "migrations": [

@@ -1,29 +1,109 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { decode, verify } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 // import { User } from './entity/User';
 // import { Tweet } from './entity/Tweet';
 // import { Like } from './entity/Like';
 // import { Comment } from './entity/Comment';
-import {User, Tweet, Comment, Like } from '../entity/user';
+import {User, Tweet, Comment, Like } from '../entity/user.entity';
+import sendEmail from '../utils/email';
+import {generateEmailToken} from '../utils/jwt';
+
+
 export async function createUser(req: Request, res: Response) {
     // create user and generate jwt token
 
     try {
         const user = new User();
-        user.name = req.body.name;
+        // user.name = req.body.name;
+       const name =  req.body.email.split("@")[0]
+       user.name = name;
         user.email = req.body.email;
         user.password = req.body.password;
-    //    console.log(user)
+       console.log(user)
         const userRepository = getRepository(User);
         // console.log(userRepository)
         await userRepository.save(user);
-        console.log(userRepository)
+        // await userRepository.save(user);
+        // console.log(userRepository)
 
-        res.status(201).send(user);
+        console.log(user)
+  const emailToken = generateEmailToken(user.email);
+    console.log(emailToken)
+//   if (process.env.NODE_ENV === 'test') {
+//     return res.status(200).json({
+//       status: 'success',
+//       user,
+//       emailToken,
+//     });
+//   } else {
+    sendEmail(
+      user.email,
+      'Email Verification',
+      `<p>Hello ${user.name},</p><p>Thank you for signing up for a Twitter account.
+       In order to access your Twitee account,</p>
+       Click
+       <button><a href= http://localhost:3000/api/users/verify/${emailToken}>here</a></button>
+       to verify your email. Thanks`,
+    )
+      .then(() => {
+        console.log('email sent');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // }
+
+    res.status(201).send(user);
+        // res.status(201).send("Token sent to mail");
     } catch (error) {
         res.status(500).send(error);
     }
 }
+
+export async function confirmEmail (req: Request, res: Response, next: NextFunction){
+    const emailToken: any = verify(
+      req.params.token as string,
+      process.env.JWT_EMAIL_KEY as string,
+    );
+    // decode the token
+    interface JwtPayload {
+        email: string;
+        iat: number;
+        exp: number;
+    }
+
+     const decodedToken = decode(req.params.token) as JwtPayload;
+ console.log(decodedToken)
+    if (!emailToken || !emailToken.email) {
+        return res.status(404).send('Invalid Token. Please SignUp!');
+    }
+    
+    //console.log(decodedToken)
+    // if (decodedToken.email !== emailToken.email) {
+    //     return res.status(404).send('Invalid Token. Please SignUp!');
+    // }
+    
+    const userRepository = getRepository(User);
+
+    const user = await userRepository.findOne({where: {email:decodedToken.email}});
+    if (!user) {
+        return res.status(404).send('We were unable to find a user for this verification. Please SignUp!');
+    } else {
+      // user.isActive = true;
+      await userRepository.save(user);
+    }
+  
+    // if (process.env.NODE_ENV === 'test') {
+    //   return res.status(201).json({
+    //     message: 'success',
+    //     emailToken,
+    //     data,
+    //   });
+    // } else {
+      return res.redirect(200, 'http://localhost:3000/api/login');
+    // }
+  }
 
 export async function getAllUsers(req: Request, res: Response) {
     try {
@@ -95,7 +175,7 @@ export async function login(req: Request, res: Response) {
             return res.status(401).send("Incorrect password");
         }
         console.log(3)
-        res.send(user);
+        res.status(200).send(user);
     } catch (error) {
         res.status(500).send(error);
 }

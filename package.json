@@ -8,6 +8,7 @@
     "build": "tsc",
     "migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
     "migration:up": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
+    "migration:down": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:revert -d src/data-source.ts",
     "test": "jest"
   },
   "dependencies": {

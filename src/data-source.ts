@@ -19,16 +19,9 @@
 
 import { createConnection, DataSourceOptions } from 'typeorm';
 import { DataSource } from 'typeorm';
-import {User, Tweet, Like} from '../entity'
+import {User, Tweet, Like} from './entity'
 
-export const DATABASE_CONNECTION = 
-createConnection
-// // new DataSource
-// new DataSource
-({
-  // export function getConfig() {
-  //   return {
-    // export const AppDataSource = new DataSource({
+    export const AppDataSource = new DataSource({
     type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -46,39 +39,6 @@ createConnection
       "subscribers": [
         "src/subscriber/**/*.ts"
       ],
-    //   "cli": {
-    //     "entitiesDir": "src/entity",
-    //     "migrationsDir": "src/migration",
-    //     "subscribersDir": "src/subscriber"
-    //   }
-// });
 })
-//  as DataSourceOptions;
-// }
 
-export const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '287693@Ata',
-  database: 'google_oauth2_app',
-entities: [
-    // User, Tweet, Like
-    __dirname + '/../**/*.entity.{js,ts}'
-],
-synchronize: true,
-"migrations": [
-    "src/migration/**/*.ts"
-  ],
-  "subscribers": [
-    "src/subscriber/**/*.ts"
-  ],
-//   "cli": {
-//     "entitiesDir": "src/entity",
-//     "migrationsDir": "src/migration",
-//     "subscribersDir": "src/subscriber"
-//   }
-// });
-})
-// export const SECRET = "yoursecretkey";
+export const SECRET = "yoursecretkey";

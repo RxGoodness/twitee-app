@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { decode, JwtPayload, verify } from 'jsonwebtoken';
-import { SECRET } from '../config';
+// import { SECRET } from '../config';
 
 export async function authenticate(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,7 +18,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         if (!token) {
             return res.status(401).send('You are not authorized! 🚨');
           }
-        const decoded = verify(token, SECRET);
+        const decoded = verify(token, process.env.SECRET as string);
         
           console.log(decoded)
         const userRepository = getRepository(User);

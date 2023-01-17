@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { decode, verify } from 'jsonwebtoken';
+import { decode, JwtPayload, verify } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 // import { User } from './entity/User';
 // import { Tweet } from './entity/Tweet';
@@ -7,25 +7,34 @@ import { getRepository } from 'typeorm';
 // import { Comment } from './entity/Comment';
 import {User, Tweet, Comment, Like } from '../entity/user.entity';
 import sendEmail from '../utils/email';
-import {generateEmailToken} from '../utils/jwt';
+import {comparePassword, createToken, generateEmailToken, hashPassword} from '../utils/jwt';
 
 
 export async function createUser(req: Request, res: Response) {
     // create user and generate jwt token
 
     try {
+      let {email, password} = req.body;
+        if(!email || !password) {
+            return res.status(400).send('Please provide the email and password')
+        }
         const user = new User();
         // user.name = req.body.name;
-       const name =  req.body.email.split("@")[0]
+       const name =  email.split("@")[0]
        user.name = name;
-        user.email = req.body.email;
-        user.password = req.body.password;
-       console.log(user)
+        user.email = email;
+        // user.password = req.body.password;
+    //    console.log(user)
+       //write logic to hash this password
+        user.password = await hashPassword(password);
+        user.isVerified = false;
+        console.log(user)
+
+        console.log(getRepository)
         const userRepository = getRepository(User);
-        // console.log(userRepository)
         await userRepository.save(user);
         // await userRepository.save(user);
-        // console.log(userRepository)
+        console.log("This",userRepository)
 
         console.log(user)
   const emailToken = generateEmailToken(user.email);
@@ -66,15 +75,10 @@ export async function confirmEmail (req: Request, res: Response, next: NextFunct
       req.params.token as string,
       process.env.JWT_EMAIL_KEY as string,
     );
+    console.log(emailToken)
     // decode the token
-    interface JwtPayload {
-        email: string;
-        iat: number;
-        exp: number;
-    }
-
-     const decodedToken = decode(req.params.token) as JwtPayload;
- console.log(decodedToken)
+    //  const decodedToken = decode(req.params.token) as JwtPayload;
+    //  console.log(decodedToken)
     if (!emailToken || !emailToken.email) {
         return res.status(404).send('Invalid Token. Please SignUp!');
     }
@@ -86,14 +90,15 @@ export async function confirmEmail (req: Request, res: Response, next: NextFunct
     
     const userRepository = getRepository(User);
 
-    const user = await userRepository.findOne({where: {email:decodedToken.email}});
+    const user = await userRepository.findOne({where: {email:emailToken.email}});
     if (!user) {
         return res.status(404).send('We were unable to find a user for this verification. Please SignUp!');
     } else {
-      // user.isActive = true;
+      user.isVerified = true;
       await userRepository.save(user);
     }
   
+    const token = createToken(user);
     // if (process.env.NODE_ENV === 'test') {
     //   return res.status(201).json({
     //     message: 'success',
@@ -101,7 +106,8 @@ export async function confirmEmail (req: Request, res: Response, next: NextFunct
     //     data,
     //   });
     // } else {
-      return res.redirect(200, 'http://localhost:3000/api/login');
+        return res.status(201).send({user, token})
+    //   return res.redirect(200, 'http://localhost:3000/api/login');
     // }
   }
 
@@ -161,21 +167,27 @@ export async function deleteUser(req: Request, res: Response) {
 
 export async function login(req: Request, res: Response) {
     try {
+        const {email, password} = req.body;
+
         console.log(1)
         // console.log(req.body)
         const userRepository = getRepository(User);
-        const user = await userRepository.findOne({where: {email: req.body.email}});
+        const user = await userRepository.findOne({where: {email}});
         console.log(req.body)
 
         if (!user) {
-            return res.status(404).send("User not found");
+            return res.status(404).send("User not found, please sign up or check if the email is correct");
         }
-        console.log(2)
-        if (user.password !== req.body.password) {
+        if(user.isVerified === false){
+            return res.status(404).send("User not verified, please verify your email");
+        }
+        const comparedPassword = comparePassword(password, user.password);
+        if (!comparedPassword) {
             return res.status(401).send("Incorrect password");
         }
-        console.log(3)
-        res.status(200).send(user);
+        const token = createToken(user);
+        // const userVerified = await userRepository.findOne({where: {email, isVerified: true}});
+        res.status(200).send({user, token});
     } catch (error) {
         res.status(500).send(error);
 }
@@ -191,17 +203,20 @@ export async function logout(req: Request, res: Response) {
             return res.status(404).send("User not found");
         }
 
-        await userRepository.remove(user);
+        // await userRepository.remove(user);
 
-        res.status(204).send();
+        res.status(204).send("User logged out");
     } catch (error) {
         res.status(500).send(error);
     }
 }
 
 export const createTweet = async (req: Request, res: Response) => {
-    const { content } = req.body;
-    const user = await getRepository(User).findOne(req.body.userId);
+    const { content, id } = req.body;
+    // const {user} = req
+    // console.
+    // const verifyToken = verifyToken(req);
+    const user = await getRepository(User).findOne(id);
     const tweetRepository = getRepository(Tweet);
 
     if (!user) {

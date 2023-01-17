@@ -128,6 +128,9 @@ export class User {
     @Column()
     password!: string;
 
+    @Column()
+    isVerified!: boolean;
+
     @OneToMany(type => Tweet, tweet => tweet.user)
     tweets!: Tweet[];
 

@@ -48,4 +48,4 @@ export const DATABASE_CONNECTION = createConnection
     //   }
 });
 
-export const SECRET = "yoursecretkey";
+// export const SECRET = "yoursecretkey";

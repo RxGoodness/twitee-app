@@ -83,15 +83,13 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'ty
 //     }
 // }
 
-// class ITweet {
+// interface ITweet {
 //     content: string;
-//     user: User;
-//     constructor(content: string, user: User) {
-//         this.content = content;
-//         this.user = user;
-//     }
+    
 // }
-
+// interface ItweetwithUser extends ITweet {
+//     user: User;
+//     }
 // class ILike {
 //     tweet: Tweet;
 //     user: User;
@@ -139,6 +137,7 @@ export class User {
 
     @OneToMany(type => Comment, comments => comments.user)
     comments!: Comment[];
+
 }
 
 @Entity()
@@ -157,6 +156,15 @@ export class Tweet {
 
     @OneToMany(type => Comment, comments => comments.tweet)
     comments!: Comment[];
+
+    // constructor(){
+    //     this.id = 0;
+    //     this.content = '';
+    //     this.user = new User();
+    //     this.likes = [];
+    //     this.comments = [];
+
+    // }
 }
 
 @Entity()

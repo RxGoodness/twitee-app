@@ -212,23 +212,27 @@ export async function logout(req: Request, res: Response) {
 }
 
 export const createTweet = async (req: Request, res: Response) => {
-    const { content, id } = req.body;
+    const { content, user } = req.body;
     // const {user} = req
     // console.
     // const verifyToken = verifyToken(req);
-    const user = await getRepository(User).findOne(id);
-    const tweetRepository = getRepository(Tweet);
-
-    if (!user) {
+    // console.log("user-this",user)
+    // console.log("userId",user.id)
+    const foundUser = await getRepository(User).findOne({where: {id:user.id}});
+console.log("first found user",foundUser)
+const tweetRepository = getRepository(Tweet);
+console.log("second foun user",foundUser)
+    if (!foundUser) {
         res.status(404).json({ error: 'User not found' });
         return;
     }
 
     try {
         const tweet = tweetRepository.create({
-            user,
+            // foundUser,
             content,
         });
+        tweet.user = foundUser;
         await tweetRepository.save(tweet);
         res.status(201).json({ tweet });
     } catch (error) {
@@ -269,6 +273,7 @@ export async function updateTweet(req: Request, res: Response) {
 
 export async function deleteTweet(req: Request, res: Response) {
     try {
+        const {user} = req.body;
         const tweetRepository = getRepository(Tweet);
         const tweet = await tweetRepository.findOne({where: {id: parseInt(req.params.id, 10)}}
         );
@@ -277,24 +282,60 @@ export async function deleteTweet(req: Request, res: Response) {
             return res.status(404).send("Tweet not found");
         }
 
-        await tweetRepository.remove(tweet);
+        // find tweet with user id
+        const tweetUser = await getRepository(Tweet).findOne({where: {id: parseInt(req.params.id, 10)}, relations: ["user"]});
+        // console.log(tweetUser)
+        // console.log("this phase", tweet.user.id, user.id)
+        // console.log(tweet)
+        // console.log("user", user.id)
+        if(!tweetUser?.user){
+            console.log("tweet user is null")
+            return res.status(404).send("No user found for this tweet, you are not authorized to delete this tweet");
+        }
+        console.log(tweetUser?.user)
+        console.log("this phase", tweetUser?.user)
+        console.log("second", tweetUser?.user.id)
+        console.log(!tweetUser?.user.id)
+        // if(tweetUser?.user)
+        // else if{
+        if(user.id !== tweetUser?.user.id){
+            return res.status(404).send("You are not authorized to delete this tweet");
+        }
+        // }
+    // }
+    
 
-        res.status(204).send();
+        // console.log(tweetUser)
+        // const tweetUser = await getRepository(User).findOne({where: {id: parseInt(req.params.id, 10)},
+
+        // {user.id:tweet.user.id}
+    // }
+    //     );
+        await tweetRepository.remove(tweet);
+console.log("no error")
+// console.log("ckeck if exist", await getRepository(Tweet).findOne({where: {id: parseInt(req.params.id, 10)}, relations: ["user"]}))
+
+        res.status(200).send("Tweet sucessfully deleted by user");
     } catch (error) {
         res.status(500).send(error);
     }
 }
 
 export async function addLike(req: Request, res: Response) {
-    const tweet = await getRepository(Tweet).findOne(req.body.tweetId);
-    const user = await getRepository(User).findOne(req.body.userId);
+    const {user, content} = req.body
+    const {id} = req.params
+    const tweet = await getRepository(Tweet).findOne({where:{id: parseInt(id, 10)}});
+    const loggedInUser = await getRepository(User).findOne({where:{id:user.id}});
     const likeRepository = getRepository(Like);
 
+    console.log("tweet", tweet)
+    console.log("user", loggedInUser)
+    console.log("logged in user", loggedInUser)
     if (!tweet) {
         res.status(404).json({ error: 'Tweet not found' });
         return;
     }
-    if (!user) {
+    if (!loggedInUser) {
         res.status(404).json({ error: 'User not found' });
         return;
     }
@@ -304,24 +345,27 @@ export async function addLike(req: Request, res: Response) {
             tweet,
             user,
         });
+        console.log("like", like)
+        // like.content = content;
         await likeRepository.save(like);
-        res.status(201).json({ like });
+        res.status(201).json({ message:"Thank you for liking this post", ...like });
     } catch (error) {
         res.status(500).json({ error});
     }
 }
 
 export async function addComment(req: Request, res: Response) {
-    const { content } = req.body;
-    const tweet = await getRepository(Tweet).findOne(req.body.tweetId);
-    const user = await getRepository(User).findOne(req.body.userId);
+    const {user, content} = req.body
+    const {id} = req.params
+    const tweet = await getRepository(Tweet).findOne({where:{id: parseInt(id, 10)}});
+    const loggedInUser = await getRepository(User).findOne({where:{id:user.id}});
     const commentRepository = getRepository(Comment);
 
     if (!tweet) {
         res.status(404).json({ error: 'Tweet not found' });
         return;
     }
-    if (!user) {
+    if (!loggedInUser) {
         res.status(404).json({ error: 'User not found' });
         return;
     }
@@ -332,10 +376,21 @@ export async function addComment(req: Request, res: Response) {
             user,
             content,
         });
+        console.log(comment)
         await commentRepository.save(comment);
-        res.status(201).json({ comment });
+        res.status(201).json({ message:"Thank you for your comment on this post", comment });
     } catch (error) {
         res.status(500).json({ error});
     }
 }
 
+export async function getComments(req: Request, res: Response) {
+    try {
+        const commentRepository = getRepository(Comment);
+        const comments = await commentRepository.find({ relations: ["user", "tweet"] });
+
+        res.send(comments);
+    } catch (error) {
+        res.status(500).send    
+    }
+}

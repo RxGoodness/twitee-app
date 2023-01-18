@@ -5,7 +5,7 @@ import { compare, hash } from 'bcrypt';
 // import dotenv from 'dotenv';
 // dotenv.config();
 // import { SECRET } from 'data-source';
-
+import { Request, Response, NextFunction } from 'express';
 
 export function createToken(user: User) {
     return sign({ id: user.id }, process.env.SECRET as string, { expiresIn: '1d' });
@@ -26,6 +26,104 @@ export function unsignToken(token: string) {
     // return design(token);
     // destroy(token);
 }
+
+// export async decode(params: { token: string }): Promise<IDecoded> {
+//     return new Promise((resolve, reject) => {
+//       const { token } = params;
+//       verify(token, jwt_secret, (error, decoded) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(decoded as IDecoded);
+//         }
+//       });
+//     });
+//   },
+export interface IDecoded {
+    id: string;
+    role: string;
+    iat: number;
+    exp: number;
+  }
+// export async function decoding(params: { token: string },
+//     req: Request,
+//     res:Response,
+//     next:NextFunction
+//     ): Promise<IDecoded> {
+//     return new Promise((resolve, reject) => {
+//       const { token } = params;
+//       verify(token, process.env.SECRET as string, (error, decoded) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(decoded as IDecoded);
+//         }
+//       });
+//     });
+//   }
+
+// export async function verifyAcessToken(
+//     req: Request,
+//     res: Response,
+//     next: NextFunction
+//   ) {
+//     try {
+//       const authHeader = req.headers["authorization"];
+//       if (!authHeader) {
+//         return res.status(401).send('You are not authorized! 🚨');
+//         }
+//     //   const bearerToken = handleAuthHeader(authHeader);
+  
+//       const token = authHeader.split(" ")[1];
+//       const decoded: IDecoded = await decode({ token });
+  
+//       req.decoded = { id: decoded.id, role: decoded.role };
+//       next();
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+  
+//   function handleAuthHeader(authHeader: string | undefined, 
+//     req: Request,
+//     res: Response,
+//     // next: NextFunction
+//   ) {
+//     if (!authHeader) {
+//     return res.status(401).send('You are not authorized! 🚨');
+//     }
+  
+//     return authHeader;
+//   }
+export const jwtVerification = {
+
+    async encode(params: { id: string, role?: string }): Promise<string> {
+        return new Promise((resolve, reject) => {
+          sign(params, process.env.SECRET as string, { expiresIn: '1d' }, (error, token) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(token as string);
+            }
+          });
+        });
+      },
+
+async decode(params: { token: string }): Promise<IDecoded> {
+    return new Promise((resolve, reject) => {
+      const { token } = params;
+      verify(token, process.env.SECRET as string, (error, decoded) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(decoded as IDecoded);
+          console.log(decoded)
+        }
+      });
+    });
+  } 
+}
+
 
 
 export function hashPassword(password: string) {

@@ -22,12 +22,12 @@ import { DataSource } from 'typeorm';
 import {User, Tweet, Like} from './entity'
 
     export const AppDataSource = new DataSource({
-    type: 'mysql',
-      host: 'localhost',
+      type: 'mysql',
       port: 3306,
-      username: 'root',
-      password: '287693@Ata',
-      database: 'google_oauth2_app',
+        host: "localhost",
+        username: "root",
+        password: "287693@Ata",
+        database: "google_oauth2_app",
     entities: [
         // User, Tweet, Like
         __dirname + '/../**/*.entity.{js,ts}'

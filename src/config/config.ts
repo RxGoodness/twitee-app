@@ -1,21 +1,3 @@
-// import { createConnection } from 'typeorm';
-
-// export const secret = "yoursecretkey";
-
-// createConnection({
-//     type: 'mysql',
-//     host: 'localhost',
-//     port: 3306,
-//     username: 'your_username',
-//     password: 'your_password',
-//     database: 'your_database_name',
-//     entities: [User, Tweet, Like, Comment],
-//     synchronize: true,
-// }).then(connection => {
-//     console.log('Connection to the database established!');
-// }).catch(error => {
-//     console.log(error);
-// });
 
 import { createConnection, DataSourceOptions } from 'typeorm';
 import { DataSource } from 'typeorm';
@@ -23,12 +5,7 @@ import {User, Tweet, Like} from '../entity'
 
 export const DATABASE_CONNECTION = 
 createConnection
-// // new DataSource
-// new DataSource
 ({
-  // export function getConfig() {
-  //   return {
-    // export const AppDataSource = new DataSource({
     type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -46,16 +23,7 @@ createConnection
       "subscribers": [
         "src/subscriber/**/*.ts"
       ],
-    //   "cli": {
-    //     "entitiesDir": "src/entity",
-    //     "migrationsDir": "src/migration",
-    //     "subscribersDir": "src/subscriber"
-    //   }
-// });
 })
-//  as DataSourceOptions;
-// }
-
 export const AppDataSource = new DataSource({
   type: 'mysql',
   host: 'localhost',
@@ -81,4 +49,3 @@ synchronize: true,
 //   }
 // });
 })
-// export const SECRET = "yoursecretkey";

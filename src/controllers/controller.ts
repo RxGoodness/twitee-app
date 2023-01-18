@@ -8,11 +8,15 @@ import { getRepository } from 'typeorm';
 import {User, Tweet, Comment, Like } from '../entity/user.entity';
 import sendEmail from '../utils/email';
 import {comparePassword, createToken, generateEmailToken, hashPassword} from '../utils/jwt';
-
+import { authValidation, contentValidation } from 'middlewares';
 
 export async function createUser(req: Request, res: Response) {
     // create user and generate jwt token
-
+    const { error } = authValidation.validate(req.body);
+    if (error) {
+        res.status(400).send({ message: 'Invalid inputs', errors: error.message})
+        return;
+}
     try {
       let {email, password} = req.body;
         if(!email || !password) {
@@ -63,8 +67,8 @@ export async function createUser(req: Request, res: Response) {
       });
     // }
 
-    res.status(201).send(user);
-        // res.status(201).send("Token sent to mail");
+    // res.status(201).send(user);
+        res.status(201).send("Token sent to mail, please click on the link to verify your email");
     } catch (error) {
         res.status(500).send(error);
     }
@@ -106,7 +110,7 @@ export async function confirmEmail (req: Request, res: Response, next: NextFunct
     //     data,
     //   });
     // } else {
-        return res.status(201).send({user, token})
+        return res.status(201).send({message:"user successfully verified", user, token})
     //   return res.redirect(200, 'http://localhost:3000/api/login');
     // }
   }
@@ -167,6 +171,11 @@ export async function deleteUser(req: Request, res: Response) {
 
 export async function login(req: Request, res: Response) {
     try {
+        const { error } = authValidation.validate(req.body);
+    if (error) {
+        res.status(400).send({ message: 'Invalid inputs', errors: error.message})
+        return;
+}
         const {email, password} = req.body;
 
         console.log(1)
@@ -187,7 +196,7 @@ export async function login(req: Request, res: Response) {
         }
         const token = createToken(user);
         // const userVerified = await userRepository.findOne({where: {email, isVerified: true}});
-        res.status(200).send({user, token});
+        res.status(200).send({message:"user login successful",user, token});
     } catch (error) {
         res.status(500).send(error);
 }
@@ -213,6 +222,11 @@ export async function logout(req: Request, res: Response) {
 
 export const createTweet = async (req: Request, res: Response) => {
     const { content, user } = req.body;
+    const { error } = contentValidation.validate(content);
+    if (error) {
+        res.status(400).send({ message: 'Invalid inputs', errors: error.message})
+        return;
+}
     // const {user} = req
     // console.
     // const verifyToken = verifyToken(req);
@@ -234,7 +248,7 @@ console.log("second foun user",foundUser)
         });
         tweet.user = foundUser;
         await tweetRepository.save(tweet);
-        res.status(201).json({ tweet });
+        res.status(201).json({ message:"tweet created succesful",tweet });
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -245,7 +259,7 @@ export async function getAllTweets(req: Request, res: Response) {
         const tweetRepository = getRepository(Tweet);
         const tweets = await tweetRepository.find({ relations: ["user"] });
 
-        res.send(tweets);
+        res.send({message:"tweets retrieved successful",tweets});
     } catch (error) {
         res.status(500).send(error);
     }
@@ -322,7 +336,7 @@ console.log("no error")
 }
 
 export async function addLike(req: Request, res: Response) {
-    const {user, content} = req.body
+    const {user} = req.body
     const {id} = req.params
     const tweet = await getRepository(Tweet).findOne({where:{id: parseInt(id, 10)}});
     const loggedInUser = await getRepository(User).findOne({where:{id:user.id}});
@@ -355,7 +369,13 @@ export async function addLike(req: Request, res: Response) {
 }
 
 export async function addComment(req: Request, res: Response) {
+    
     const {user, content} = req.body
+    const { error } = contentValidation.validate(content);
+    if (error) {
+        res.status(400).send({ message: 'Invalid inputs', errors: error.message})
+        return;
+}
     const {id} = req.params
     const tweet = await getRepository(Tweet).findOne({where:{id: parseInt(id, 10)}});
     const loggedInUser = await getRepository(User).findOne({where:{id:user.id}});
@@ -389,8 +409,8 @@ export async function getComments(req: Request, res: Response) {
         const commentRepository = getRepository(Comment);
         const comments = await commentRepository.find({ relations: ["user", "tweet"] });
 
-        res.send(comments);
+        res.send({message:"Comments retrieved succesfully", comments});
     } catch (error) {
-        res.status(500).send    
+        res.status(500).send(error);
     }
 }

@@ -5,6 +5,8 @@ import { decode, JwtPayload, verify } from 'jsonwebtoken';
 import {  jwtVerification } from 'utils';
 // import { SECRET } from '../config';
 import { Request, Response, NextFunction } from 'express';
+import * as z from 'zod';
+import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 export interface IDecoded {
   id: string;
@@ -49,32 +51,11 @@ const user = await userRepository.findOne({where: { id: decoded.id}});
 }
 // }
 
-// function handleAuthHeader(authHeader: string | undefined) {
-//   if (!authHeader) {
-//     throw new APIError({
-//       status: 401,
-//       message: "No authorization header set",
-//     });
-//   }
+export const authValidation = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).max(255).required()
+});
 
-//   return authHeader;
-// }
-
-
-
-// export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
-//   let token: string | undefined;
-//   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-//     token = req.headers.authorization.split(' ')[1];
-//   }
-
-//   if (!token) {
-//     return res.status(401).send('You are not authorized! 🚨');
-//   }
-
-//   const decodedToken: any = jwt.verify(token as string, process.env.SECRET as string);
-//   const user = await User.findOne({ email: decodedToken.email });
-//   req.user = user;
-
-//   next();
-// }
+export const contentValidation = Joi.object({
+  content: Joi.string().max(280).required()
+});

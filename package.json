@@ -4,7 +4,7 @@
   "description": "Your project description",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon -r tsconfig-paths/register -r dotenv/config ./app.ts",
+    "start": "ts-node -r tsconfig-paths/register -r dotenv/config ./app.ts",
     "build": "tsc",
     "migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
     "migration:up": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",

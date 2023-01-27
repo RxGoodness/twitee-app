@@ -17,17 +17,42 @@
 //     console.log(error);
 // });
 
+// import { createConnection, DataSourceOptions } from 'typeorm';
+// import { DataSource } from 'typeorm';
+// import {User, Tweet, Like} from './entity'
+
+//     export const AppDataSource = new DataSource({
+//       type: 'postgres',
+//       port: 5432,
+//         host: "dpg-cf4648mn6mpos6v3fn50-a",
+//         username: "rxgoodness",
+//         password: "OVNxBujUsoolINm34H5FuUN25T0JtQdW",
+//         database: "rxgoodness",
+//     entities: [
+//         // User, Tweet, Like
+//         __dirname + '/../**/*.entity.{js,ts}'
+//     ],
+//     synchronize: true,
+//     "migrations": [
+//         "src/migration/**/*.ts"
+//       ],
+//       "subscribers": [
+//         "src/subscriber/**/*.ts"
+//       ],
+// })
+
+
 import { createConnection, DataSourceOptions } from 'typeorm';
 import { DataSource } from 'typeorm';
 import {User, Tweet, Like} from './entity'
 
     export const AppDataSource = new DataSource({
-      type: 'mysql',
-      port: 3306,
+      type: 'postgres',
+      port: 5432,
         host: "localhost",
-        username: "root",
+        username: "rxgoodness",
         password: "287693@Ata",
-        database: "google_oauth2_app",
+        database: "rxgoodness",
     entities: [
         // User, Tweet, Like
         __dirname + '/../**/*.entity.{js,ts}'
@@ -40,5 +65,6 @@ import {User, Tweet, Like} from './entity'
         "src/subscriber/**/*.ts"
       ],
 })
+
 
 export const SECRET = "yoursecretkey";

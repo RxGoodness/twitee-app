@@ -117,7 +117,7 @@ dotenv.config();
 // require('dotenv').config();
 
 // Connect to the database
-// AppDataSource.initialize()
+AppDataSource.initialize()
 //     .then(() => {
 // DATABASE_CONNECTION
         // create the express app

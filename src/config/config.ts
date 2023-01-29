@@ -144,28 +144,28 @@ createConnection
         "src/subscriber/**/*.ts"
       ],
 })
-export const AppDataSource = new DataSource({
-  type: 'mysql',
-  port: 3306,
-    host: "sql.freedb.tech",
-    username: "freedb_rxgoodness",
-    password: "%Q#7cEVvef#cHxU",
-    database: "freedb_rxgoodness",
-entities: [
-    // User, Tweet, Like
-    __dirname + '/../**/*.entity.{js,ts}'
-],
-synchronize: true,
-"migrations": [
-    "src/migration/**/*.ts"
-  ],
-  "subscribers": [
-    "src/subscriber/**/*.ts"
-  ],
-//   "cli": {
-//     "entitiesDir": "src/entity",
-//     "migrationsDir": "src/migration",
-//     "subscribersDir": "src/subscriber"
-//   }
-// });
-})
+// export const AppDataSource = new DataSource({
+//   type: 'mysql',
+//   port: 3306,
+//     host: "sql.freedb.tech",
+//     username: "freedb_rxgoodness",
+//     password: "%Q#7cEVvef#cHxU",
+//     database: "freedb_rxgoodness",
+// entities: [
+//     // User, Tweet, Like
+//     __dirname + '/../**/*.entity.{js,ts}'
+// ],
+// synchronize: true,
+// "migrations": [
+//     "src/migration/**/*.ts"
+//   ],
+//   "subscribers": [
+//     "src/subscriber/**/*.ts"
+//   ],
+// //   "cli": {
+// //     "entitiesDir": "src/entity",
+// //     "migrationsDir": "src/migration",
+// //     "subscribersDir": "src/subscriber"
+// //   }
+// // });
+// })

@@ -1,10 +1,10 @@
 {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
-    "password": "password",
-    "database": "mydb",
+    "type": "mysql",
+  "port": 3306,
+    "host": "sql.freedb.tech",
+    "username": "freedb_rxgoodness",
+    "password": "%Q#7cEVvef#cHxU",
+    "database": "freedb_rxgoodness",
     "entities": ["src/entity/*.ts"],
     "synchronize": true
 }

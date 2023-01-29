@@ -108,7 +108,7 @@ import twitRoutes from './src/routes/tweet';
 import userRoutes from './src/routes/user';
 import { authenticate } from './src/middlewares';
 import dotenv from 'dotenv';
-import { AppDataSource } from 'data-source';
+// import { AppDataSource } from 'data-source';
 // import { AppDataSource } from 'config/datasource.config';
 
 dotenv.config();
@@ -117,7 +117,7 @@ dotenv.config();
 // require('dotenv').config();
 
 // Connect to the database
-AppDataSource.initialize()
+// AppDataSource.initialize()
 //     .then(() => {
 // DATABASE_CONNECTION
         // create the express app

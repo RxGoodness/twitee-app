@@ -1,23 +1,30 @@
-version: '3.8'
+version: '3.7'
 services:
-  app:
-    image: postgres:13
+  postgres:
+    image: postgres:9.6
     ports:
-      - 5434:5432
+      - 9003:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: rxgoodness
+      POSTGRES_USER: rxgoodness
+      POSTGRES_PASSWORD: 287693@Ata
+      POSTGRES_DB: rxgoodness2
+    logging:
+            options:
+                max-size: 10m
+                max-file: "3"
     networks:
       - rxgoodness
   db:
-    image: postgres:13
+    image: dpage/pgadmin4
     ports:
       - 5435:5432
+    logging:
+            options:
+                max-size: 10m
+                max-file: "3"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: rxgoodness
+      - PGADMIN_DEFAULT_EMAIL=adedokuntoyyib@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=287693@Ata
     networks:
       - rxgoodness
 networks:

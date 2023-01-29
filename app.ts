@@ -117,7 +117,7 @@ dotenv.config();
 // require('dotenv').config();
 
 // Connect to the database
-AppDataSource.initialize()
+// AppDataSource.initialize()
 //     .then(() => {
 // DATABASE_CONNECTION
         // create the express app
@@ -125,7 +125,6 @@ AppDataSource.initialize()
 DATABASE_CONNECTION
     .then(async connection => {
         console.log("Connected to the database!");
-    console.log("Connected to the database!");
         // create the express app
         const app = express();
 
@@ -143,3 +142,6 @@ console.log("starting point")
         app.listen(3000, () => console.log('Server started on port 3000'));
     })
     .catch((error:any) => console.log('Error: ', error));
+
+
+    // docker run --name twitee -d -p 2002:5432
